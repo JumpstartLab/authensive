@@ -18,6 +18,10 @@ module Authensive
       ENV.fetch('RACK_ENV') { 'development' }
     end
 
+    def self.shared_secret
+      ENV['AUTHENSIVE_SHARED_SECRET']
+    end
+
     def self.database_config
       YAML.load(File.read('./config/database.yml'))[environment]
     end

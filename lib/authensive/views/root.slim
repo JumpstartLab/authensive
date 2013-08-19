@@ -14,5 +14,6 @@ html
           <img src='#{ current_user.image }'/>
         li
           <a href='/logout'>Logout</a>
+        li = session.inspect
     - else
       <a href='/auth/github'>Login with Github</a>
