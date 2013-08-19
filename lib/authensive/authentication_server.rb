@@ -12,16 +12,20 @@ module Authensive
     end
 
     get '/auth/:name/callback' do
-      auth = request.env["omniauth.auth"]
-      # user = User.first_or_create({ :uid => auth["uid"]}, {
-      #   :uid => auth["uid"],
-      #   :name => auth["info"]["name"], 
-      #   :nickname => auth["info"]["nickname"], 
-      #   :email => auth["info"]["email"], 
-      #   :created_at => Time.now })
-      raise auth.inspect
+      omniauth_data = request.env["omniauth.auth"]
+      user = User.create_or_login_with_omniauth(omniauth_data)
       session[:user_id] = user.id
       redirect '/'
+    end
+
+    get '/' do
+      slim :root
+    end
+
+    helpers do
+      def current_user
+        @current_user ||= User.find(session[:user_id]) if session[:user_id]
+      end
     end
 
   end

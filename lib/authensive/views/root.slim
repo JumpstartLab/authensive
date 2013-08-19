@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    title Authensive
+
+  body
+    h1 Current User
+
+    - if current_user
+      ul
+        - [:name, :nickname, :provider, :uid, :email].each do |attribute|
+          li = "#{attribute}: #{current_user.send(attribute)}"
+        li
+          <img src='#{ current_user.image }'/>
+        li
+          <a href='/logout'>Logout</a>
+    - else
+      <a href='/auth/github'>Login with Github</a>
