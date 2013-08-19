@@ -1,0 +1,8 @@
+---
+development:
+  adapter: sqlite3
+  database: db/authensive_development
+
+test:
+  adapter: sqlite3
+  database: db/authensive_test
