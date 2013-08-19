@@ -5,6 +5,8 @@ require 'minitest/pride'
 require 'bundler'
 Bundler.require
 
+ENV['RACK_ENV'] = 'test'
+
 require './lib/authensive'
 
 require 'database_cleaner'

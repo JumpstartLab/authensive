@@ -8,8 +8,4 @@ namespace :db do
   task :migrate do
     ActiveRecord::Migrator.migrate('db/migrate')
   end
-
-  task :test_prepare do
-    `RACK_ENV=test rake db:migrate`
-  end
 end
