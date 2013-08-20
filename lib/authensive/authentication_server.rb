@@ -20,8 +20,7 @@ module Authensive
     get '/auth/:name/callback' do
       user = User.create_or_login_with_omniauth request.env["omniauth.auth"]
       session[:user_id] = user.id
-      sig_input = "authensive_user_#{user.id}_" + Config.shared_secret
-      sig_output = session[:authensive_signiture] = Digest::MD5.hexdigest(sig_input)
+      session[:authensive_signiture] = SignatureGenerator.digest(user.id)
       if session[:callback]
         redirect "#{session[:callback]}?return_to=#{session[:return_to]}&user_id=#{user.id}&authensive_signiture=#{session[:authensive_signiture]}"
       else
@@ -30,10 +29,12 @@ module Authensive
     end
 
     get '/user/:id' do |id|
-      sig_input = "authensive_user_#{id}_" + Config.shared_secret
-      if params[:authensive_signiture] == Digest::MD5.hexdigest(sig_input)
+      if params['authensive_signature'] == SignatureGenerator.digest(id)
+        puts "Finding User with ID #{id}: #{User.find(id).to_json}"
         User.find(id).to_json
       else
+        puts "Signature mismatch for ID #{id} and param sig #{params['authensive_signature']} and calculated sig #{SignatureGenerator.digest(id)}"
+        puts "Params: #{params.inspect}"
         status 400
       end
     end
